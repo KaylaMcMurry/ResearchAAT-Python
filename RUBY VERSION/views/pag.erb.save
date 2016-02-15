@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<link href=​"../​static/​css/​main.css" rel=​"stylesheet">​
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script>		
+			var validID = false;
+			var ourIP = '<%= request.ip %>'; //set the IP address variable to be in post and print with the database results	
+			var lastKeyPress = Date.now();
+
+			function change_theme()
+			{
+				theme = document.getElementById("select_theme").value;
+				editor.setTheme("ace/theme/" + theme);
+			}
+
+			setInterval( function() 
+			{
+				var currentTime = Date.now();
+				if( validID == true && (currentTime - lastKeyPress <= 5000) )
+				{
+                                        value = formatCode();
+                                        var value2 = document.getElementById("userid").value;
+					$.ajax({
+						type: 'POST',
+						url: '/execute',
+						data: {'content':value,'userid':value2},
+						error: function(result) {},
+						success: function(result) {}
+					});
+				}
+			}, 6000);
+		
+			function formatCode()
+			{
+				var code = editor.getValue();
+				var code = code.replace(/\r?\n/g, "<br/>"); //replace return carriage and newline characters
+				var code = code.replace(/ /g,"&nbsp;"); //replace spaces with ACII value
+				return code;
+			} 
+
+			function submitcode()
+			{
+				if(validID == true)
+				{
+					value = formatCode();
+					var value2 = document.getElementById("userid").value;
+					value = "<u>Final Submission</u></br>"+formatCode(value);
+					$.ajax({
+						type: 'POST',
+						url: '/execute',
+						data: {'content':value,'userid':value2},
+						error: function(result) {},
+						success: function(result) {}
+					});
+					document.getElementById("codeSpace").innerHTML = value;
+				}
+				else { alert("Please enter a valid ID before submitting your quiz.") }
+			}
+
+			function checkID()
+			{
+				var value = document.getElementById("userid").value;
+		    		var p = new RegExp('([a-z])'+'([a-z])'+'([a-z])'+'(\\d)'+'(\\d)'+'([a-z])');
+		    		var m = p.exec(value);
+		   		if (m != null)
+		    		{
+					validID = true;
+		       			var modal = document.getElementById("modal");
+		       			modal.parentNode.removeChild(modal);
+		    		}
+			}
+
+			$(document).bind('keypress', function(e) 
+			{ lastKeyPress = Date.now(); if(e.keyCode == 13) {e.preventDefault();} });
+
+		</script>
+	</head>
+	<body>
+		<p> <h1> Quiz</h1> </p>
+                <div id="options" >
+                        Change theme:
+                        <select id="select_theme" onchange="change_theme();">
+                                <option value="idle_fingers" selected>idle_fingers</option>
+                                <option value="merbivore">merbivore</option>
+                                <option value="xcode">xcode</option>
+                        </select>
+                </div>
+		<div id = "codeSpace">
+			<form action="/execute" method="post" id = "codeForm">
+				<h2>Please enter a valid user ID first. When you are done with your quiz, please submit it by hitting the "Finish" button.</h2>
+				User ID: <input id="userid" type="text" name="userid" value="" onkeyup = checkID()> </input>
+				<br>
+				<br>
+				<input type="submit" value="Finish" onclick = "submitcode(); return false;">
+				<br>
+				<div id="code">
+					<div id="editor"> #write your code here </div>
+					<div id="modal"> &nbsp;</div>
+
+					<script src="ace-builds/src-noconflict/ace.js" charset="utf-8"></script>
+					<script>
+						var editor = ace.edit("editor");
+						editor.setTheme("ace/theme/idle_fingers");
+						editor.getSession().setMode("ace/mode/python");
+					</script>
+				</div>	
+			</form>
+		</div>
+	</body>
+</html>

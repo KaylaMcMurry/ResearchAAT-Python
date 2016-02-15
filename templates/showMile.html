@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Milestone Results</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/css/signup.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+
+      $(document).ready(function() {   
+        $('#btnClass').click(function() {
+            $.ajax({
+                url: '/getMile',
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    $('.jumbotron').append(format(JSON.parse(response)));
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+      });
+      
+      function format(response)
+      {
+        var code = response.replace(/\r?\n/g, "<br/>"); //replace return carriage and newline characters
+        var code = code.replace(/ /g,"&nbsp;"); //replace spaces with ACII value
+        return code;
+      } 
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Milestones</h3>
+      </div>
+      <div class="jumbotron">
+        <button id="btnClass" class="btn btn-large btn-success btn-block" type="button">View Milestone Results</button>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!-- 
+  mymetrics = Metric.all
+    total = ""
+    mymetrics.each do |c|
+      total += "<b> Milestone #{c[:metricid]}:\"#{c[:metricstring]}\"</b> </br> is first present in entry: </br> \"#{c[:codecontent]}\" </br> at time stamp: <b>#{c[:codetime]} </b></br></br>"
+    end
+    "#{total}"
+    end
+
+
+  For every different USERID or IP or COMBO, I need to run the milestones and show the userID and IP at the beginning of each one plus a count of how many they completed.
+  -->
+
+

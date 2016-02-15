@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>View Database Content</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/css/signup.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+
+      $(document).ready(function() {   
+        $('#btnClass').click(function() {
+            $.ajax({
+                url: '/DB',
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    $('.jumbotron').append(format(JSON.parse(response)));
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+      });
+
+      function format(response)
+      {
+        var code = response.replace(/\r?\n/g, "<br/>"); //replace return carriage and newline characters
+        var code = code.replace(/ /g,"&nbsp;"); //replace spaces with ACII value
+        return code;
+      } 
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Database Content</h3>
+      </div>
+      <div class="jumbotron">
+        <button id="btnClass" class="btn btn-large btn-success btn-block" type="button">View Database Content</button>
+      </div>
+    </div>
+  </body>
+</html>

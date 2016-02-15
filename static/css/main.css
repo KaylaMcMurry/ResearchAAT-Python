@@ -1,0 +1,27 @@
+.submit {
+    width: 50px; 
+    background-color: white; 
+    border-color: red;
+}
+
+#editor {
+    width: 800px;
+    height: 500px;
+    border: 1px;
+    border-color: solid black;
+    position: absolute;
+    z-index: 1;
+}
+
+#modal {
+    width: 800px;
+    height: 500px;
+    border: 1px;
+    border-color: solid black;
+    position: absolute;
+    z-index: 2;
+}
+
+#code {
+    position: absolute;
+}
