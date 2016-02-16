@@ -1,1 +1,1 @@
-# ReserchAAT-Python
+# ResearchAAT-Python
