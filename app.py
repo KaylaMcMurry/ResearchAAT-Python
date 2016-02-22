@@ -8,9 +8,9 @@ app = Flask(__name__)
 app.secret_key = 'my secret key'
 mysql = MySQL()
 
-app.config['MYSQL_DATABASE_USER'] = 'aat'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'aat'
-app.config['MYSQL_DATABASE_DB'] = 'research'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_DB'] = 'researchAAT'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 
 @app.route("/showMile")
@@ -19,7 +19,7 @@ def showMile():
 
 @app.route("/getMile", methods=['GET'])
 def getMile():
-    results = milestones.mile1()
+    results = milestones.mile2() #ignore comments until break!!!!
     return json.dumps(results)
 
 @app.route("/showDB")
@@ -37,16 +37,20 @@ def DB():
         mysqlDB.addRow(userid, ip, content, time)
 
         returnString = "Your code has been successfully submitted. Thank you."
-        returnString += "\nIP: %s\n UserID: %s\n Content: %s" % (ip,userid,content)
         return json.dumps(returnString)
     else:
-        results = mysqlDB.returnAllContent
-        return json.dumps(results)
+        results = mysqlDB.returnAllContent()
+        return json.dumps(str(results))
 
 @app.route("/")
 def main():
     return render_template('quizMain.html')
 
+
+@app.before_first_request
+def _run_on_start():
+    mysqlDB.setupDB() 
+
 if __name__ == "__main__":
     app.debug = True
-    app.run(host='0.0.0.0')  
+    app.run(host='0.0.0.0')

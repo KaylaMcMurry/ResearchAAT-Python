@@ -2,15 +2,10 @@
 <html lang="en">
     <title>Python Quiz</title>
     <head>
-        <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
         <!--<link href=​"../​static/​css/​main.css" rel=​"stylesheet">​-->
         <style>
-            .submit {
-                width: 50px; 
-                background-color: white; 
-                border-color: red;
-            }
 
             #editor {
                 width: 800px;
@@ -33,6 +28,20 @@
             #code {
                 position: absolute;
             }
+
+            .container {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+
+            div {
+                padding-bottom: 2.5%;
+            }
+
+            .page-header {
+                margin-top: 0;
+            }
+
         </style>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="../static/ace-builds/src-noconflict/ace.js" charset="utf-8"></script>
@@ -43,6 +52,7 @@
             //set the IP address variable to be in post
             var lastKeyPress = Date.now();
             var submitted = false;
+            var lastSubmission = "&bnsp;#write&bnsp;your&bnsp;code&bnsp;here&bnsp;"
 
             function change_theme()
             {
@@ -58,20 +68,24 @@
                     if( validID == true && (currentTime - lastKeyPress >= 5000) )
                     {
                         myContent = formatCode();
-                        var myUserID = document.getElementById("userid").value;
+                        if(myContent != lastSubmission)
+                        {
+                            var myUserID = document.getElementById("userid").value;
 
-                        $.ajax({
-                            type: 'POST',
-                            url: '/DB',
-                            data: {"content":myContent, "userid":myUserID, "ip": myIP},
-                            success: function(result) {
-                                console.log("Successful submission to the database (not final submission).")
-                            },
-                            error: function(error) {
-                                alert("There has been an error with the database, please contact the administrator.");
-                                console.log(error);
-                            }
-                        });
+                            $.ajax({
+                                type: 'POST',
+                                url: '/DB',
+                                data: {"content":myContent, "userid":myUserID, "ip": myIP},
+                                success: function(result) {
+                                    console.log("Successful submission to the database (not final submission).")
+                                    lastSubmission = myContent;
+                                },
+                                error: function(error) {
+                                    alert("There has been an error with the database, please contact the administrator.");
+                                    console.log(error);
+                                }
+                            });
+                        }
                     }
                 }
             }, 5000);
@@ -135,29 +149,37 @@
         </script>
     </head>
     <body>
-        <h1> Python Quiz </h1>
-        <div id = "codeSpace">
-            <form action="/execute" method="post" id = "codeForm">
-                <h2>Please enter a valid user ID first. When you are done with your quiz, please submit it by hitting the "Finish" button.</h2>
-                User ID: <input id="userid" type="text" name="userid" value="" onkeyup="checkID()"></input> <input class="submit" type="button" value="Finish" onclick = "submitcode(); return false;">
-                <div id="options">
-                    Change theme:
-                    <select id="select_theme" onchange="change_theme();">
-                        <option value="idle_fingers" selected>idle_fi$
-                        <option value="merbivore">merbivore</option>
-                        <option value="xcode">xcode</option>
-                    </select>
-                </div>
-                <div id="code">
-                    <div id="editor" class="editor"> #write your code here </div>
-                    <div id="modal"> &nbsp;</div>
-                    <script>
-                        var editor = ace.edit("editor");
-                        editor.setTheme("ace/theme/idle_fingers");
-                        editor.getSession().setMode("ace/mode/python");
-                    </script>
-                </div>  
-            </form>
+        <div class = "container">
+            <div class="page-header">
+              <h1>Python Quiz <small><br/>Please enter a valid user ID first. When you are done with your quiz, please submit it by hitting the "Finish" button.</small></h1>
+            </div>
+            <div id = "codeSpace">
+                <form action="/execute" method="post" id = "codeForm">
+                    <div class="input-group col-xs-5 col-lg-4">
+                        <input type="text" class="form-control" placeholder="ACU User ID" aria-describedby="basic-addon1" id="userid" name="userid" value="" onkeyup="checkID()">
+                        <div class="input-group-btn">
+                            <button class="btn btn-danger" type="button" onclick="submitcode(); return false;">Finish</button>
+                        </div>
+                    </div>
+                    <div id="options">
+                        Change theme:
+                        <select id="select_theme" onchange="change_theme();">
+                            <option value="idle_fingers" selected>idle_fi$
+                            <option value="merbivore">merbivore</option>
+                            <option value="xcode">xcode</option>
+                        </select>
+                    </div>
+                    <div id="code">
+                        <div id="editor" class="editor"> #write your code here </div>
+                        <div id="modal"> &nbsp;</div>
+                        <script>
+                            var editor = ace.edit("editor");
+                            editor.setTheme("ace/theme/idle_fingers");
+                            editor.getSession().setMode("ace/mode/python");
+                        </script>
+                    </div>  
+                </form>
+            </div>
         </div>
     </body>
 </html>

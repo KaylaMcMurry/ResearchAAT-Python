@@ -17,18 +17,20 @@ def mile1():
     id = 3
     metric = "left_standing called first time"
     query = []
-    query[0] = 'def&nbsp;left_standing.*?main.*?left_standing' #find left_standing in main after def left_standing
-    query[1] = 'main.*?left_standing.*?def&nbsp;left_standing' #find any left_standing in main before def left_standing
-    query[2] = 'main.*?left_standing' #make sure is last option - no def left_standing
+    query0 = 'def&nbsp;left_standing.*?main.*?left_standing' #find left_standing in main after def left_standing
+    query1 = 'main.*?left_standing.*?def&nbsp;left_standing' #find any left_standing in main before def left_standing
+    query2 = 'main^((?!def)).*?left_standing' #make sure is last option - no def left_standing
+    query = [query0,query1,query2]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     # #fourth milestone
     id = 4
     metric = "left_standing called second time"
     query = []
-    query[0] = 'def&nbsp;left_standing.*?main.*?left_standing.*?left_standing'
-    query[1] = 'main.*?left_standing.*?left_standing.*?def&nbsp;left_standing'
-    query[2] = 'main.*?left_standing.*?left_standing'
+    query0 = 'def&nbsp;left_standing.*?main.*?left_standing.*?left_standing'
+    query1 = 'main.*?left_standing.*?left_standing.*?def&nbsp;left_standing'
+    query2 = 'main^((?!def)).*?left_standing.*?left_standing'
+    query = [query0,query1,query2]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     #fifth milestone
@@ -42,38 +44,36 @@ def mile1():
     id = 6
     metric = "print result"
     query = []
-    query[0] = 'print&nbsp;(\().*?"Total.*?(\))'
-    query[1] = 'print(\().*?"Total.*?(\))'
+    query0 = 'print&nbsp;(\().*?"Total.*?(\))'
+    query1 = 'print(\().*?Total.*?(\))'
+    query = [query0,query1]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
-    #seventh milestone
+    #seventh milestone - STILL NEEDS WORK 
     id = 7
     metric = "begin body of left_standing function"
     query = []
-    query[0] = 'def&nbsp;left_standing.*?(\().*?((?:[a-z][a-z]+)).*?,.*?((?:[a-z][a-z]+)).*?(\)).*?:<br/>&nbsp;&nbsp;&nbsp;&nbsp;((?:[a-z][a-z]+)).*?<br/>.*?main' #def left before main
-    query[1] = 'main.*?def&nbsp;left_standing.*?(\().*?((?:[a-z][a-z]+)).*?,.*?((?:[a-z][a-z]+)).*?(\)).*?:<br/>&nbsp;&nbsp;&nbsp;&nbsp;((?:[a-z][a-z]+))' #def left after main
-
-    query[2] = 'def&nbsp;left_standing.*?(\().*?((?:[a-z][a-z]+)).*?,.*?((?:[a-z][a-z]+)).*?(\)).*?:<br/>&nbsp;&nbsp;&nbsp;&nbsp;((?:[a-z][a-z]+))' #no main
+    query0 = 'def&nbsp;left_standing.*?:.*?(&nbsp;)*(?!def)(?!br)(?!main)((?:[a-z][a-z]+)).*?main' #def left before main
+    query1 = 'main.*?def&nbsp;left_standing.*?:.*?(&nbsp;)*(?!def)(?!main)(?!br)((?:[a-z][a-z]+))' #def left after main
+    query2 = 'def&nbsp;left_standing.*?:.*?<br\/>(&nbsp;)*(?!nbsp;)(?!main)(?!def)(?!br)((?:[a-z][a-z]+))' #no main
+    query = [query0,query1,query2]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     results = mysqlDB.printMilestones()
     return results
 
 
-
-
-
 def mile2():
     #first milestone
     id = 1
     metric = "input for game/scrimage"
-    query = 'input.*?(\().*?Enter&nbsp;g.*?Game.*?s.*?(\)).*?'
+    query = 'input(&nbsp;)*(\().*?Enter&nbsp;g.*?Game.*?s.*?(\))'
     mysqlDB.queryContent(query,id,metric)
 
     #second milestone
     id = 2
     metric = "input for # players"
-    query = 'input.*?(\().*?(How&nbsp;many&nbsp;players).*?(\)).*?'
+    query = 'input.*?(\().*?(How&nbsp;many&nbsp;players).*?(\))'
     mysqlDB.queryContent(query,id,metric)
 
     #third milestone
@@ -87,8 +87,9 @@ def mile2():
     id = 4
     metric = "loop present"
     query = []
-    query[0] = 'while'
-    query[1] = 'for'
+    query0 = 'while'
+    query1 = 'for'
+    query = [query0,query1]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
         
 
@@ -96,8 +97,9 @@ def mile2():
     id = 5
     metric = "loop nested within if statement"
     query = []
-    query[0] = 'if.*?:.*?for'
-    query[1] = 'if.*?:.*?while'
+    query0 = 'if.*?:.*?for'
+    query1 = 'if.*?:.*?while'
+    query = [query0,query1]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     #sixth milestone
@@ -110,8 +112,9 @@ def mile2():
     id = 7
     metric = "else or elif"
     query = []
-    query[0] = 'else'
-    query[1] = 'elif'
+    query0 = 'else'
+    query1 = 'elif'
+    query = [query0,query1]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     #eigth milestone
@@ -124,8 +127,9 @@ def mile2():
     id = 9
     metric = "input for our team within else/elif"
     query = []
-    query[0] = 'else.*?input.*?(\().*?Our&nbsp;team.*?(\))'
-    query[1] = 'elif.*?input.*?(\().*?Our&nbsp;team.*?(\))'
+    query0 = 'else.*?input.*?(\().*?Our&nbsp;team.*?(\))'
+    query1 = 'elif.*?input.*?(\().*?Our&nbsp;team.*?(\))'
+    query = [query0,query1]
     mysqlDB.mulipleQueries(query, len(query), id, metric)
 
     #tenth milestone
